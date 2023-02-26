@@ -1,4 +1,4 @@
-package ru.eshtykin.acs_monitoring_admin.ui.theme
+package ru.eshtykin.acs_monitoring_admin.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

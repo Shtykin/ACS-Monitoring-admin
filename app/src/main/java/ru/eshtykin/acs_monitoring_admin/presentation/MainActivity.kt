@@ -1,4 +1,4 @@
-package ru.eshtykin.acs_monitoring_admin
+package ru.eshtykin.acs_monitoring_admin.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,11 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import ru.eshtykin.acs_monitoring_admin.ui.theme.Acs_monitoringadminTheme
+import ru.eshtykin.acs_monitoring_admin.presentation.screen.login.LoginScreen
+import ru.eshtykin.acs_monitoring_admin.presentation.screen.login.LoginScreenState
+import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Acs_monitoringadminTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,22 +21,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    LoginScreen(LoginScreenState.Loading)
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    Acs_monitoringadminTheme {
-        Greeting("Android")
-    }
-}
+
