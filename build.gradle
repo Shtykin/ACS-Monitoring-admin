@@ -8,3 +8,9 @@ plugins {
     id 'com.android.library' version '7.4.1' apply false
     id 'org.jetbrains.kotlin.android' version '1.7.0' apply false
 }
+
+task assembleAllDebug(type: GradleBuild) {
+    group 'App tasks'
+    description 'Создание сборок'
+    tasks = ['app:assembleDev', 'app:assembleStaging']
+}
