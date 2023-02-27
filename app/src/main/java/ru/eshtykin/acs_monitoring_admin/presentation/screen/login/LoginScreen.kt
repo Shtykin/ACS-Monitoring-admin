@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
+import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.LoadingSection
 import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Acs_monitoringadminTheme
 
 @Composable
@@ -14,7 +15,7 @@ fun LoginScreen(
 
     when (uiState) {
         is LoginScreenState.Loading ->{
-            LoadingLoginSection()
+            LoadingSection()
         }
         is LoginScreenState.Authorized -> {
 
