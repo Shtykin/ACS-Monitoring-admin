@@ -1,4 +1,4 @@
-package ru.eshtykin.acs_monitoring_admin.ui.theme
+package ru.eshtykin.acs_monitoring_admin.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
@@ -15,7 +15,8 @@ private val DarkColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = Purple500,
     primaryVariant = Purple700,
-    secondary = Teal200
+    secondary = Teal200,
+    background = DarkGrey1,
 
     /* Other default colors to override
     background = Color.White,
