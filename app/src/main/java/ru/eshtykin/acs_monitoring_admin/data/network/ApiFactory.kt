@@ -10,7 +10,10 @@ import ru.eshtykin.acs_monitoring_admin.network.Constants
 
 
 object ApiFactory {
+    private val authInterceptor = AuthInterceptor()
+
     private val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(authInterceptor)
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         })
@@ -26,5 +29,6 @@ object ApiFactory {
         .client(okHttpClient)
         .build()
 
-    val apiService: ApiService = retrofit.create()
+
+    val apiService: ApiService = retrofit.create(ApiService::class.java)
 }
