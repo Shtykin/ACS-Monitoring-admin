@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.eshtykin.acs_monitoring_admin.domain.Owner
 import ru.eshtykin.acs_monitoring_admin.domain.User
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.DetailsScreen
@@ -20,6 +21,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Acs_monitoringadminTheme {
+                val viewModel: MainViewModel = viewModel()
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
