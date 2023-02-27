@@ -7,7 +7,6 @@ import ru.eshtykin.acs_monitoring_admin.data.model.*
 
 interface ApiService {
 
-
     @GET("/")
     suspend fun checkServer(): String
 

@@ -7,12 +7,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import ru.eshtykin.acs_monitoring_admin.network.Constants
+import java.util.concurrent.TimeUnit
 
 
 object ApiFactory {
     private val authInterceptor = AuthInterceptor()
 
     private val okHttpClient = OkHttpClient.Builder()
+        .writeTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(5, TimeUnit.SECONDS)
         .addInterceptor(authInterceptor)
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
