@@ -7,9 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import ru.eshtykin.acs_monitoring_admin.network.Constants
-import ru.eshtykin.acs_monitoring_admin.presentation.screen.login.LoginScreen
-import ru.eshtykin.acs_monitoring_admin.presentation.screen.login.LoginScreenState
+import ru.eshtykin.acs_monitoring_admin.domain.Owner
+import ru.eshtykin.acs_monitoring_admin.domain.User
+import ru.eshtykin.acs_monitoring_admin.presentation.screen.users.UsersScreen
+import ru.eshtykin.acs_monitoring_admin.presentation.screen.users.UsersScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Acs_monitoringadminTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +23,22 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    LoginScreen(LoginScreenState.Loading)
+//                    LoginScreen(LoginScreenState.Loading)
+//                    UsersScreen(uiState = UsersScreenState.Error("Empty users list"))
+
+                    val users = mutableListOf<User>()
+                    repeat(5) {
+                        users.add(User("login $it"))
+                    }
+                    val owners = mutableListOf<Owner>()
+                    repeat(10) {
+                        owners.add(Owner("Owner $it"))
+                    }
+                    users.add(User("login 5", role = "Explorer", owners = owners))
+                    repeat(5) {
+                        users.add(User("login 1$it", role = "Device"))
+                    }
+                    UsersScreen(UsersScreenState.Users(users))
                 }
             }
         }

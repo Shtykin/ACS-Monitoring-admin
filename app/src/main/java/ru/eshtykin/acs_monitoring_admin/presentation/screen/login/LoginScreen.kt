@@ -32,7 +32,7 @@ fun LoginScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun LoginScreenPreview() {
     Acs_monitoringadminTheme {
         LoginScreen(LoginScreenState.Loading)
     }
