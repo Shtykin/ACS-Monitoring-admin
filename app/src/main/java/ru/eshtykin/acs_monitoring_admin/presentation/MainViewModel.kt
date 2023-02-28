@@ -1,23 +1,25 @@
 package ru.eshtykin.acs_monitoring_admin.presentation
 
-import android.app.Application
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.eshtykin.acs_monitoring_admin.data.repository.RepositoryImpl
-import ru.eshtykin.acs_monitoring_admin.domain.Owner
-import ru.eshtykin.acs_monitoring_admin.domain.User
+import ru.eshtykin.acs_monitoring_admin.domain.entity.Owner
+import ru.eshtykin.acs_monitoring_admin.domain.Repository
+import ru.eshtykin.acs_monitoring_admin.domain.entity.User
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.DetailsScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.login.LoginScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.users.UsersScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.state.ScreenState
+import javax.inject.Inject
 
-class MainViewModel(application: Application): AndroidViewModel(application) {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val repository: Repository
+): ViewModel() {
 
-    val repository = RepositoryImpl()
 
     private val _uiState = mutableStateOf<ScreenState>(ScreenState.LoginScreen(LoginScreenState.UnAuthorized()))
     val uiState: State<ScreenState>

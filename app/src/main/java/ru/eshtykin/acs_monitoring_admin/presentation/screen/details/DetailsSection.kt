@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.eshtykin.acs_monitoring_admin.domain.User
+import ru.eshtykin.acs_monitoring_admin.domain.entity.User
 import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Green1
 import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.LightGrey1
 import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Yellow220

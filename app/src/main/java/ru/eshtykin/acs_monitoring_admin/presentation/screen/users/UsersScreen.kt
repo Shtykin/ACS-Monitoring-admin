@@ -3,7 +3,7 @@ package ru.eshtykin.acs_monitoring_admin.presentation.screen.users
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import ru.eshtykin.acs_monitoring_admin.domain.User
+import ru.eshtykin.acs_monitoring_admin.domain.entity.User
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.LoadingSection
 import ru.eshtykin.acs_monitoring_admin.presentation.state.ScreenState
 

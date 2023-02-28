@@ -1,6 +1,6 @@
 package ru.eshtykin.acs_monitoring_admin.presentation.screen.details
 
-import ru.eshtykin.acs_monitoring_admin.domain.User
+import ru.eshtykin.acs_monitoring_admin.domain.entity.User
 
 sealed class DetailsScreenState {
 
