@@ -1,5 +1,6 @@
 package ru.eshtykin.acs_monitoring_admin.presentation.screen.users
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,7 +26,8 @@ import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Yellow220
 
 @Composable
 fun UsersSection(
-    users: List<User>?
+    users: List<User>?,
+    onItemClick: (User) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -36,7 +38,10 @@ fun UsersSection(
         LazyColumn() {
             users?.let {
                 items(it) {
-                    UserSmallCard(user = it)
+                    UserSmallCard(
+                        user = it,
+                        onItemClick = onItemClick
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -46,7 +51,8 @@ fun UsersSection(
 
 @Composable
 fun UserSmallCard(
-    user: User
+    user: User,
+    onItemClick: (User) -> Unit
 ) {
     val color = when (user.role) {
         "Explorer" -> Green1
@@ -59,7 +65,9 @@ fun UserSmallCard(
         else -> Icons.Outlined.QuestionMark
     }
     Card(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { onItemClick.invoke(user) },
         colors = CardDefaults.cardColors(containerColor = color),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

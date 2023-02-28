@@ -17,4 +17,5 @@ sealed class ScreenState{
     data class UsersScreen(
         val state: UsersScreenState
     ) : ScreenState()
+
 }

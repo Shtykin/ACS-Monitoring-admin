@@ -19,39 +19,26 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     val repository = RepositoryImpl()
 
-    private val _uiState = mutableStateOf<ScreenState>(ScreenState.LoginScreen(LoginScreenState.Loading))
+    private val _uiState = mutableStateOf<ScreenState>(ScreenState.LoginScreen(LoginScreenState.UnAuthorized()))
     val uiState: State<ScreenState>
         get() = _uiState
 
     var token = ""
 
-    init {
-        viewModelScope.launch {
-            try {
-//                Log.e("DEBUG", repository.checkServer())
-//            val response = repository.authAdmin("admin", "adminpass")
-//            val response = repository.getAllUsers()
-                val response = repository.getUser("user11")
-//            val response = repository.changeRole("user1", "Explorer")
-//            val response = repository.addOwner("user1", "ЗРУ-01_№010123")
-                Log.e("DEBUG", "response = $response")
-            } catch (e: Exception){
-                Log.e("DEBUG", "${e.message}")
-            }
-        }
-
-    }
-
-    fun authenticateAdmin(login: String, password: String) {
+    suspend fun authenticateAdmin(login: String, password: String): Boolean {
         _uiState.value = ScreenState.LoginScreen(LoginScreenState.Loading)
-        viewModelScope.launch {
-            try {
-                token = repository.authAdmin(login, password)
-                _uiState.value = ScreenState.LoginScreen(LoginScreenState.Authorized)
-            } catch (e: Exception) {
-                _uiState.value = ScreenState.LoginScreen(LoginScreenState.UnAuthorized(e.message))
-            }
+        return try {
+            token = repository.authAdmin(login, password)
+            _uiState.value = ScreenState.LoginScreen(LoginScreenState.Authorized)
+            true
+        } catch (e: Exception) {
+            _uiState.value = ScreenState.LoginScreen(LoginScreenState.UnAuthorized(e.message))
+            false
         }
+    }
+    fun unAuthenticateAdmin() {
+        token = ""
+        _uiState.value = ScreenState.LoginScreen(LoginScreenState.UnAuthorized())
     }
 
     fun getUser(login: String){
@@ -110,6 +97,14 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
                 _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.Error(e.message))
             }
         }
+    }
+
+    fun openRoleDialog(user: User){
+        _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.RoleDialog(user))
+    }
+
+    fun openOwnerDialog(user: User){
+        _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.OwnerDialog(user))
     }
 
 
