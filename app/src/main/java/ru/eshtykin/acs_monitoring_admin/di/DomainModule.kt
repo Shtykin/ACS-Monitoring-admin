@@ -30,4 +30,5 @@ class DomainModule {
     @Provides
     fun provideGetUserUseCase(repository: Repository): GetUserUseCase =
         GetUserUseCase(repository)
+
 }

@@ -27,12 +27,15 @@ class MainActivity : ComponentActivity() {
             Acs_monitoringadminTheme {
                 val navHostController = rememberNavController()
                 val uiState by viewModel.uiState
+                val startScreenRoute = if (viewModel.isAuthenticated()) Screen.Users.route else Screen.Login.route
+                if (viewModel.isAuthenticated()) viewModel.getAllUsers()
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
                     AppNavGraph(
+                        startScreenRoute = startScreenRoute,
                         navHostController = navHostController,
                         loginScreenContent = {
                             LoginScreen(

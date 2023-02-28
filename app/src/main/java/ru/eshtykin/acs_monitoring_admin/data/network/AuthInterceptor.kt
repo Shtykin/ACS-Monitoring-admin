@@ -4,8 +4,11 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
+import ru.eshtykin.acs_monitoring_admin.settings.AuthStore
 
-class AuthInterceptor() : Interceptor {
+class AuthInterceptor(
+    private val authStore: AuthStore
+) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         synchronized(this) {
             val request = chain.request().appendToken()
@@ -31,7 +34,7 @@ class AuthInterceptor() : Interceptor {
         val authHeaderName = "Baerer-Autorization"
         return newBuilder()
             .removeHeader(authHeaderName)
-            .addHeader(authHeaderName, "fab1956c-941e-46a0-88fa-4837901681ce")
+            .addHeader(authHeaderName, authStore.accessToken)
             .build()
     }
 

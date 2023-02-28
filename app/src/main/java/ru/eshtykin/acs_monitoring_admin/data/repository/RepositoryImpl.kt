@@ -8,10 +8,9 @@ import ru.eshtykin.acs_monitoring_admin.domain.Repository
 import ru.eshtykin.acs_monitoring_admin.domain.entity.User
 
 class RepositoryImpl(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val mapper: Mapper
 ) : Repository {
-
-    private val mapper = Mapper()
 
     override suspend fun checkServer(): String =
         apiService.checkServer()
