@@ -2,6 +2,7 @@ package ru.eshtykin.acs_monitoring_admin.presentation.state
 
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.DetailsScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.login.LoginScreenState
+import ru.eshtykin.acs_monitoring_admin.presentation.screen.users.UsersScreenState
 
 sealed class ScreenState{
 
@@ -14,6 +15,7 @@ sealed class ScreenState{
     ) : ScreenState()
 
     data class UsersScreen(
-        val state: UsersScreen
+        val state: UsersScreenState
     ) : ScreenState()
+
 }

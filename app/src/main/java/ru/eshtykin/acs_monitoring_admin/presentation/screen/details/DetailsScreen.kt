@@ -1,158 +1,144 @@
 package ru.eshtykin.acs_monitoring_admin.presentation.screen.details
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.ElectricMeter
-import androidx.compose.material.icons.outlined.Monitor
-import androidx.compose.material.icons.outlined.QuestionMark
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.eshtykin.acs_monitoring_admin.domain.Owner
 import ru.eshtykin.acs_monitoring_admin.domain.User
-import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Acs_monitoringadminTheme
+import ru.eshtykin.acs_monitoring_admin.presentation.state.ScreenState
+import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.DarkGrey1
 import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Green1
-import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.LightGrey1
 import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Yellow220
 
 @Composable
 fun DetailsScreen(
-    uiState: DetailsScreenState
+    uiState: ScreenState,
+    onBackClick: (() -> Unit)?,
+    onAddOwnerClick: (User) -> Unit,
+    onRoleClick: (User) -> Unit,
+    onExplorerClick: (User) -> Unit,
+    onDeviceClick: (User) -> Unit,
+    onSubmitOwnerClick: (User, Owner) -> Unit,
+    onCancelOwnerClick: (User) -> Unit
 ) {
     val scope = rememberCoroutineScope()
+//    val openRoleDialog = remember { mutableStateOf(false) }
 
-    when (uiState) {
-        is DetailsScreenState.Loading -> {
-            LoadingSection()
-        }
-        is DetailsScreenState.Error -> {
-            ErrorDetailsSection(message = uiState.message)
+    BackHandler {
+        onBackClick?.invoke()
+    }
 
-        }
-        is DetailsScreenState.Details -> {
-            DetailsSection(user = uiState.user)
-        }
-    }
-}
+    (uiState as? ScreenState.DetailsScreen)?.let {
+        when (it.state) {
+            is DetailsScreenState.Loading -> {
+                LoadingSection()
+            }
+            is DetailsScreenState.Error -> {
+                ErrorDetailsSection(message = it.state.message)
 
-@Preview(showBackground = true)
-@Composable
-fun DetailsScreenPreview() {
-    Acs_monitoringadminTheme {
-        DetailsScreen(DetailsScreenState.Loading)
-    }
-}
-
-@Composable
-fun DetailsSection(
-    user: User
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 16.dp),
-    ) {
-        DetailsSmallCard(user)
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DetailsSmallCard(
-    user: User
-) {
-    val color = when (user.role) {
-        "Explorer" -> Green1
-        "Device" -> Yellow220
-        else -> LightGrey1
-    }
-    val icon = when (user.role) {
-        "Explorer" -> Icons.Outlined.Monitor
-        "Device" -> Icons.Outlined.ElectricMeter
-        else -> Icons.Outlined.QuestionMark
-    }
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        floatingActionButton = {
-            FloatingActionButton(onClick = {}) {
-                Icon(imageVector = Icons.Outlined.Add, contentDescription = null)
+            }
+            is DetailsScreenState.Details -> {
+                DetailsSection(
+                    user = it.state.user,
+                    onRoleClick = onRoleClick,
+                    onAddOwnerClick = onAddOwnerClick
+                )
+            }
+            is DetailsScreenState.RoleDialog -> {
+                RoleDialog(
+                    user = it.state.user,
+                    onExplorerClick = onExplorerClick,
+                    onDeviceClick = onDeviceClick
+                )
+            }
+            is DetailsScreenState.OwnerDialog -> {
+                OwnerDialog(
+                    user = it.state.user,
+                    onSubmitOwnerClick = onSubmitOwnerClick,
+                    onCancelOwnerClick = onCancelOwnerClick
+                )
             }
         }
-    ){paddingValues ->
-        Column() {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Card(
-                    colors = CardDefaults.cardColors(containerColor = color),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    }
+}
+
+@Composable
+fun OwnerDialog(
+    user: User,
+    onSubmitOwnerClick: (User, Owner) -> Unit,
+    onCancelOwnerClick: (User) -> Unit
+) {
+    var owner by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = { },
+        title = { Text(text = "Adding an Owner") },
+        text = {
+               Column() {
+//                   Text("У пользователя ${user.login} текущая роль ${user.role}. Выбрать:")
+                   TextField(
+                       value = owner,
+                       onValueChange = { owner = it},
+                       label = { Text("Owner") },
+                   )
+               }
+        },
+        buttons = {
+            Row() {
+                Button(
+                    modifier = Modifier.weight(0.5f),
+                    onClick = { onSubmitOwnerClick.invoke(user, Owner(owner)) },
+//                    colors = ButtonDefaults.buttonColors(backgroundColor = Green1)
                 ) {
-                    Icon(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(40.dp),
-                        imageVector = icon,
-                        contentDescription = null
-                    )
+                    Text("Submit", fontSize = 22.sp)
                 }
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Text(
-                        text = user.login,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
-                    )
-                    Text(
-                        modifier = Modifier.clickable {
-
-                        },
-                        text = user.role ?: "Empty",
-                        fontSize = 20.sp,
-                        fontStyle = FontStyle.Italic,
-                        color = Color.White
-                    )
+                Button(
+                    modifier = Modifier.weight(0.5f),
+                    onClick = { onCancelOwnerClick.invoke(user) },
+//                    colors = ButtonDefaults.buttonColors(backgroundColor = Yellow220)
+                ) {
+                    Text("Cancel", fontSize = 22.sp)
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Owners:",
-                fontSize = 20.sp,
-                color = Color.White
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            LazyColumn(
-                contentPadding = paddingValues,
-                modifier = Modifier.weight(1f)
-            ){
-                user.owners?.let {
-                    items(it) {
-                        Text(
-                            text = it.value,
-                            color = Color.White
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                    }
+
+        },
+        contentColor = DarkGrey1
+    )
+}
+
+@Composable
+fun RoleDialog(
+    user: User,
+    onExplorerClick: (User) -> Unit,
+    onDeviceClick: (User) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { },
+        title = { Text(text = "Role Assignment") },
+        text = { Text("User ${user.login} have current role ${user.role}. Choose new:") },
+        buttons = {
+            Row() {
+                Button(
+                    modifier = Modifier.weight(0.5f),
+                    onClick = { onExplorerClick.invoke(user) },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Green1)
+                ) {
+                    Text("Explorer", fontSize = 22.sp)
+                }
+                Button(
+                    modifier = Modifier.weight(0.5f),
+                    onClick = { onDeviceClick.invoke(user) },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Yellow220)
+                ) {
+                    Text("Device", fontSize = 22.sp)
                 }
             }
-        }
-    }
 
+        },
+        contentColor = DarkGrey1
+    )
 }

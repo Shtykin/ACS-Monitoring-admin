@@ -49,12 +49,9 @@ class RepositoryImpl : Repository {
         throw IllegalStateException(response.errorBody()?.string())
     }
 
-
     override suspend fun addOwner(login: String, owner: String): Owner {
         val response = apiService.addOwner(AddOwnerDto(login, owner))
         response.body()?.let { return Owner(it.owner) }
         throw IllegalStateException(response.errorBody()?.string())
     }
-
-
 }
