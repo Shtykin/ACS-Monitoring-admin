@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.eshtykin.acs_monitoring_admin.domain.entity.Owner
-import ru.eshtykin.acs_monitoring_admin.domain.Repository
 import ru.eshtykin.acs_monitoring_admin.domain.entity.User
+import ru.eshtykin.acs_monitoring_admin.domain.usecase.*
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.DetailsScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.login.LoginScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.users.UsersScreenState
@@ -17,6 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val addOwnerUseCase: AddOwnerUseCase,
+    private val authAdminUseCase: AuthAdminUseCase,
+    private val changeRoleUseCase: ChangeRoleUseCase,
+    private val getAllUsersUseCase: GetAllUsersUseCase,
+    private val getUserUseCase: GetUserUseCase
 ): ViewModel() {
 
 
@@ -29,7 +34,8 @@ class MainViewModel @Inject constructor(
     suspend fun authenticateAdmin(login: String, password: String): Boolean {
         _uiState.value = ScreenState.LoginScreen(LoginScreenState.Loading)
         return try {
-            token = repository.authAdmin(login, password)
+//            token = repository.authAdmin(login, password)
+            token = authAdminUseCase.execute(login, password)
             _uiState.value = ScreenState.LoginScreen(LoginScreenState.Authorized)
             true
         } catch (e: Exception) {
@@ -46,7 +52,8 @@ class MainViewModel @Inject constructor(
         _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.Loading)
         viewModelScope.launch {
             try {
-                val user = repository.getUser(login)
+//                val user = repository.getUser(login)
+                val user = getUserUseCase.execute(login)
                 _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.Details(user))
             } catch (e: Exception) {
                 _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.Error(e.message))
@@ -58,7 +65,8 @@ class MainViewModel @Inject constructor(
         _uiState.value = ScreenState.UsersScreen(UsersScreenState.Loading)
         viewModelScope.launch {
             try {
-                val users = repository.getAllUsers()
+//                val users = repository.getAllUsers()
+                val users = getAllUsersUseCase.execute()
                 _uiState.value = ScreenState.UsersScreen(UsersScreenState.Users(users))
             } catch (e: Exception) {
                 _uiState.value = ScreenState.UsersScreen(UsersScreenState.Error(e.message))
@@ -69,7 +77,8 @@ class MainViewModel @Inject constructor(
     fun changeUserRole(user: User, role: String) {
         viewModelScope.launch {
             try {
-                val result = repository.changeRole(user.login, role)
+//                val result = repository.changeRole(user.login, role)
+                val result = changeRoleUseCase.execute(user, role)
                 if (result) {
                     val newUser = user.copy(role = role)
                     _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.Details(newUser))
@@ -85,7 +94,8 @@ class MainViewModel @Inject constructor(
     fun addUserOwner(user: User, owner: Owner) {
         viewModelScope.launch {
             try {
-                val owner = repository.addOwner(user.login, owner.value)
+//                val owner = repository.addOwner(user.login, owner.value)
+                val owner = addOwnerUseCase.execute(user, owner)
                 if (owner.value.isNotEmpty()) {
                     val owners = user.owners?.toMutableList() ?: mutableListOf()
                     owners.add(Owner(owner.value))
