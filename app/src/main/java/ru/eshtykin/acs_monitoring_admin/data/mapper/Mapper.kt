@@ -1,8 +1,8 @@
 package ru.eshtykin.acs_monitoring_admin.data.mapper
 
 import ru.eshtykin.acs_monitoring_admin.data.model.UserDto
-import ru.eshtykin.acs_monitoring_admin.domain.Owner
-import ru.eshtykin.acs_monitoring_admin.domain.User
+import ru.eshtykin.acs_monitoring_admin.domain.entity.Owner
+import ru.eshtykin.acs_monitoring_admin.domain.entity.User
 
 class Mapper {
     fun mapUserDtoToUser(userDto: UserDto): User {

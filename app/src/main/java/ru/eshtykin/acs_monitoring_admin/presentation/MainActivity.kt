@@ -3,38 +3,39 @@ package ru.eshtykin.acs_monitoring_admin.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import ru.eshtykin.acs_monitoring_admin.domain.Owner
-import ru.eshtykin.acs_monitoring_admin.domain.User
+import dagger.hilt.android.AndroidEntryPoint
 import ru.eshtykin.acs_monitoring_admin.navigation.AppNavGraph
 import ru.eshtykin.acs_monitoring_admin.navigation.Screen
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.DetailsScreen
-import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.DetailsScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.login.LoginScreen
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.users.UsersScreen
-import ru.eshtykin.acs_monitoring_admin.presentation.screen.users.UsersScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Acs_monitoringadminTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val viewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Acs_monitoringadminTheme {
-                val viewModel: MainViewModel = viewModel()
                 val navHostController = rememberNavController()
                 val uiState by viewModel.uiState
+                val startScreenRoute = if (viewModel.isAuthenticated()) Screen.Users.route else Screen.Login.route
+                if (viewModel.isAuthenticated()) viewModel.getAllUsers()
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
                     AppNavGraph(
+                        startScreenRoute = startScreenRoute,
                         navHostController = navHostController,
                         loginScreenContent = {
                             LoginScreen(

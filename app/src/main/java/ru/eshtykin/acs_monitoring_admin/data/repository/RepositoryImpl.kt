@@ -1,18 +1,16 @@
 package ru.eshtykin.acs_monitoring_admin.data.repository
 
-import android.util.Log
-import retrofit2.Response
 import ru.eshtykin.acs_monitoring_admin.data.mapper.Mapper
 import ru.eshtykin.acs_monitoring_admin.data.model.*
-import ru.eshtykin.acs_monitoring_admin.data.network.ApiFactory
-import ru.eshtykin.acs_monitoring_admin.domain.Owner
+import ru.eshtykin.acs_monitoring_admin.data.network.ApiService
+import ru.eshtykin.acs_monitoring_admin.domain.entity.Owner
 import ru.eshtykin.acs_monitoring_admin.domain.Repository
-import ru.eshtykin.acs_monitoring_admin.domain.User
+import ru.eshtykin.acs_monitoring_admin.domain.entity.User
 
-class RepositoryImpl : Repository {
-
-    private val apiService = ApiFactory.apiService
-    private val mapper = Mapper()
+class RepositoryImpl(
+    private val apiService: ApiService,
+    private val mapper: Mapper
+) : Repository {
 
     override suspend fun checkServer(): String =
         apiService.checkServer()

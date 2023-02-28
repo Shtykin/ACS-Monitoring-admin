@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 
 @Composable
 fun AppNavGraph(
+    startScreenRoute: String,
     navHostController: NavHostController,
     loginScreenContent: @Composable () -> Unit,
     usersScreenContent: @Composable () -> Unit,
@@ -14,7 +15,7 @@ fun AppNavGraph(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = Screen.Login.route
+        startDestination = startScreenRoute
     ) {
         composable(Screen.Login.route) {
             loginScreenContent()

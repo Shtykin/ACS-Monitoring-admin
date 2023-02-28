@@ -7,8 +7,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
-import ru.eshtykin.acs_monitoring_admin.domain.Owner
-import ru.eshtykin.acs_monitoring_admin.domain.User
+import ru.eshtykin.acs_monitoring_admin.domain.entity.Owner
+import ru.eshtykin.acs_monitoring_admin.domain.entity.User
 import ru.eshtykin.acs_monitoring_admin.presentation.state.ScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.DarkGrey1
 import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Green1
