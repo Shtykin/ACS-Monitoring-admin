@@ -75,14 +75,15 @@ class MainActivity : ComponentActivity() {
                                     viewModel.getAllUsers()
                                 },
                                 onAddOwnerClick = {
-                                    navHostController.navigate(Screen.AddOwnerDialog.route)
+                                    navHostController.navigate(Screen.AddOwnerDialog.route) {
+                                        popUpTo(Screen.Details.route) { inclusive = true }
+                                    }
                                     viewModel.openOwnerDialog(it)
                                 },
                                 onRoleClick = {
-                                    navHostController.navigate(Screen.ChangeRoleDialog.route)
-//                                    {
-//                                        popUpTo(Screen.Details.route) { inclusive = true }
-//                                    }
+                                    navHostController.navigate(Screen.ChangeRoleDialog.route) {
+                                        popUpTo(Screen.Details.route) { inclusive = true }
+                                    }
                                     viewModel.openRoleDialog(it)
                                 },
                             )
@@ -104,7 +105,7 @@ class MainActivity : ComponentActivity() {
                             OwnerDialog(
                                 uiState = uiState,
                                 onSubmitOwnerClick = { user, owner ->
-                                    scope.launch{
+                                    scope.launch {
                                         if (viewModel.addUserOwner(user, owner)) {
                                             navHostController.navigate(Screen.Details.route)
                                         }

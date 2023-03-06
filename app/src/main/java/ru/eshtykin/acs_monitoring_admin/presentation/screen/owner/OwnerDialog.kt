@@ -1,13 +1,14 @@
 package ru.eshtykin.acs_monitoring_admin.presentation.screen.details
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.eshtykin.acs_monitoring_admin.domain.entity.Owner
@@ -24,7 +25,7 @@ fun OwnerDialog(
 ) {
     (uiState as? ScreenState.OwnerDialog)?.let {
 
-        val user = when (uiState.state){
+        val user = when (uiState.state) {
             is OwnerDialogState.Owners -> uiState.state.user
             is OwnerDialogState.Error -> uiState.state.user
         }
@@ -39,33 +40,45 @@ fun OwnerDialog(
             unfocusedLabelColor = Color.Black
         )
 
-        AlertDialog(
-            modifier = Modifier,
-            onDismissRequest = { },
-            title = { Text(text = "Adding an Owner") },
-            text = {
-                Column() {
-                    TextField(
-                        value = owner,
-                        onValueChange = { owner = it },
-                        label = { Text("Owner") },
-                        colors = textFieldColors
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .wrapContentSize()
+                .animateContentSize()
+                .sizeIn(minWidth = MinWidth, maxWidth = MaxWidth),
+            shape = RoundedCornerShape(28.0.dp),
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            Column(
+                modifier = Modifier
+                    .sizeIn(minWidth = MinWidth, maxWidth = MaxWidth)
+                    .padding(DialogPadding)
+            ) {
+                Text(
+                    text = "Adding an Owner",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = owner,
+                    onValueChange = { owner = it },
+                    label = { Text("Owner") },
+                    colors = textFieldColors
+                )
+                error?.let {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = error,
+                        color = Color.Red
                     )
-                    Spacer(modifier = Modifier.height(32.dp))
-                    error?.let {
-                        Text(
-                            text = error,
-                            color = Color.Red
-                        )
-                    }
                 }
-            },
-            buttons = {
                 Row() {
                     OutlinedButton(
                         modifier = Modifier.weight(0.5f),
                         onClick = { onSubmitOwnerClick.invoke(user, Owner(owner)) },
-                        ) {
+                    ) {
                         Text(
                             text = "Submit",
                             color = Color.Black,
@@ -83,8 +96,12 @@ fun OwnerDialog(
                         )
                     }
                 }
-            },
-            contentColor = DarkGrey1
-        )
+            }
+        }
     }
 }
+
+private val DialogPadding = PaddingValues(start = 24.dp, top = 24.dp, end = 24.dp, bottom = 18.dp)
+
+private val MinWidth = 280.dp
+private val MaxWidth = 560.dp

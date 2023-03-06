@@ -1,5 +1,6 @@
 package ru.eshtykin.acs_monitoring_admin.presentation.screen.details
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import ru.eshtykin.acs_monitoring_admin.domain.entity.User
@@ -12,9 +13,6 @@ fun DetailsScreen(
     onAddOwnerClick: (User) -> Unit,
     onRoleClick: (User) -> Unit,
 ) {
-//    val state: MutableState<ScreenState> = remember { mutableStateOf(ScreenState.DetailsScreen(DetailsScreenState.Loading)) }
-//    state.value = uiState
-//    Log.e("DEBUG", "state: ${state.value}")
 
     BackHandler {
         onBackClick?.invoke()
@@ -35,20 +33,6 @@ fun DetailsScreen(
                     onAddOwnerClick = onAddOwnerClick
                 )
             }
-//            is DetailsScreenState.RoleDialog -> {
-//                RoleDialog(
-//                    user = it.state.user,
-//                    onExplorerClick = onExplorerClick,
-//                    onDeviceClick = onDeviceClick
-//                )
-//            }
-//            is DetailsScreenState.OwnerDialog -> {
-//                OwnerDialog(
-//                    user = it.state.user,
-//                    onSubmitOwnerClick = onSubmitOwnerClick,
-//                    onCancelOwnerClick = onCancelOwnerClick
-//                )
-//            }
         }
     }
 }

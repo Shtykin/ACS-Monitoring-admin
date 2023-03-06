@@ -13,6 +13,8 @@ import androidx.compose.material.icons.outlined.Monitor
 import androidx.compose.material.icons.outlined.QuestionMark
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,6 +54,9 @@ fun DetailsSmallCard(
     onRoleClick: (User) -> Unit,
     onAddOwnerClick: (User) -> Unit
 ) {
+    val txt = rememberSaveable() {
+        mutableStateOf("123")
+    }
     val color = when (user.role) {
         "Explorer" -> Green1
         "Device" -> Yellow220
@@ -71,7 +76,8 @@ fun DetailsSmallCard(
             }
         }
     ){paddingValues ->
-        Column() {
+        Column {
+            Text(text = txt.value, color = Color.White)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
