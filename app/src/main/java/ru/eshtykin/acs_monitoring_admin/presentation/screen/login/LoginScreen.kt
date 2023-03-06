@@ -23,6 +23,7 @@ fun LoginScreen(
             is LoginScreenState.UnAuthorized -> {
                 UnAuthorizedLoginSection(
                     scope = scope,
+                    message = it.state.message,
                     onLoginClick = onLoginClick
                 )
             }

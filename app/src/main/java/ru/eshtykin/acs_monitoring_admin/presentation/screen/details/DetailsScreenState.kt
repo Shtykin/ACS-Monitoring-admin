@@ -14,12 +14,4 @@ sealed class DetailsScreenState {
         val user: User
     ) : DetailsScreenState()
 
-    data class RoleDialog(
-        val user: User
-    ) : DetailsScreenState()
-
-    data class OwnerDialog(
-        val user: User
-    ) : DetailsScreenState()
-
 }

@@ -11,6 +11,8 @@ import ru.eshtykin.acs_monitoring_admin.domain.entity.User
 import ru.eshtykin.acs_monitoring_admin.domain.usecase.*
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.DetailsScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.login.LoginScreenState
+import ru.eshtykin.acs_monitoring_admin.presentation.screen.owner.OwnerDialogState
+import ru.eshtykin.acs_monitoring_admin.presentation.screen.role.RoleDialogState
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.users.UsersScreenState
 import ru.eshtykin.acs_monitoring_admin.presentation.state.ScreenState
 import ru.eshtykin.acs_monitoring_admin.settings.AuthStore
@@ -75,6 +77,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun changeUserRole(user: User, role: String) {
+        _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.Loading)
         viewModelScope.launch {
             try {
                 val result = changeRoleUseCase.execute(user, role)
@@ -90,30 +93,34 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun addUserOwner(user: User, owner: Owner) {
+    suspend fun addUserOwner(user: User, owner: Owner): Boolean {
+        var result = false
         viewModelScope.launch {
             try {
-                val owner = addOwnerUseCase.execute(user, owner)
-                if (owner.value.isNotEmpty()) {
+                val newOwner = addOwnerUseCase.execute(user, owner)
+                if (newOwner.value.isNotEmpty()) {
                     val owners = user.owners?.toMutableList() ?: mutableListOf()
-                    owners.add(Owner(owner.value))
+                    owners.add(Owner(newOwner.value))
                     val newUser = user.copy(owners = owners)
                     _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.Details(newUser))
+                    result = true
                 } else {
-                    throw Exception("Failed, owner: ${owner.value}")
+                    throw Exception("Owner is empty")
                 }
             } catch (e: Exception) {
-                _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.Error(e.message))
+                _uiState.value = ScreenState.OwnerDialog(OwnerDialogState.Error(user, e.message))
+                result = false
             }
-        }
+        }.join()
+        return result
     }
 
     fun openRoleDialog(user: User){
-        _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.RoleDialog(user))
+        _uiState.value = ScreenState.RoleDialog(RoleDialogState.Roles(user))
     }
 
     fun openOwnerDialog(user: User){
-        _uiState.value = ScreenState.DetailsScreen(DetailsScreenState.OwnerDialog(user))
+        _uiState.value = ScreenState.OwnerDialog(OwnerDialogState.Owners(user))
     }
 
 
