@@ -1,6 +1,11 @@
 package ru.eshtykin.acs_monitoring_admin.presentation
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -15,6 +20,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.eshtykin.acs_monitoring_admin.navigation.AppNavGraph
 import ru.eshtykin.acs_monitoring_admin.navigation.Screen
+import ru.eshtykin.acs_monitoring_admin.notification.PushService.Companion.ACTION_SHOW_MESSAGE
+import ru.eshtykin.acs_monitoring_admin.notification.PushService.Companion.INTENT_FILTER
+import ru.eshtykin.acs_monitoring_admin.notification.PushService.Companion.KEY_ACTION
+import ru.eshtykin.acs_monitoring_admin.notification.PushService.Companion.KEY_MESSAGE
+import ru.eshtykin.acs_monitoring_admin.notification.PushService.Companion.newIntentFilter
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.DetailsScreen
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.OwnerDialog
 import ru.eshtykin.acs_monitoring_admin.presentation.screen.details.RoleDialog
@@ -24,9 +34,29 @@ import ru.eshtykin.acs_monitoring_admin.presentation.ui.theme.Acs_monitoringadmi
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     private val viewModel: MainViewModel by viewModels()
+
+    val pushReceiver by lazy {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val extras = intent?.extras
+                extras?.keySet()?.firstOrNull { it == KEY_ACTION }?.let { key ->
+                    when (extras.getString(key)) {
+                        ACTION_SHOW_MESSAGE -> {
+                            extras.getString(KEY_MESSAGE)?.let {
+                                Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        else -> Log.e("DEBUG", "unknow key")
+                    }
+                }
+            }
+        }
+}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        registerReceiver(pushReceiver, newIntentFilter(INTENT_FILTER))
         setContent {
             Acs_monitoringadminTheme {
                 val navHostController = rememberNavController()
@@ -121,6 +151,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(pushReceiver)
+        super.onDestroy()
     }
 }
 

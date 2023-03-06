@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "464043628489",
+    "project_id": "acs-monitoring-admin",
+    "storage_bucket": "acs-monitoring-admin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464043628489:android:34627f536603abc8d73a18",
+        "android_client_info": {
+          "package_name": "ru.eshtykin.acs_monitoring_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "464043628489-d4q63qisvk9rbglabsmefad54vcish06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7Dr3td99eh-0wXYu9T1FpIB0zhUTUofE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "464043628489-d4q63qisvk9rbglabsmefad54vcish06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
